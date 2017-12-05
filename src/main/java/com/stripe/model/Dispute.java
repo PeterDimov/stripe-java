@@ -16,7 +16,7 @@ public class Dispute extends APIResource implements HasId {
 	String object;
 	Long amount;
 	List<BalanceTransaction> balanceTransactions;
-	String charge;
+	ExpandableField<Charge> charge;
 	Long created;
 	String currency;
 	EvidenceSubObject evidenceSubObject; // `evidence`
@@ -77,11 +77,25 @@ public class Dispute extends APIResource implements HasId {
 	}
 
 	public String getCharge() {
-		return charge;
+		if (charge == null) {
+			return null;
+		}
+		return charge.getId();
 	}
 
-	public void setCharge(String charge) {
-		this.charge = charge;
+	public void setCharge(String chargeID) {
+		this.charge = setExpandableFieldID(chargeID, this.charge);
+	}
+
+	public Charge getChargeObject() {
+		if (this.charge == null) {
+			return null;
+		}
+		return this.charge.getExpanded();
+	}
+
+	public void setChargeObject(Charge charge) {
+		this.charge = new ExpandableField<Charge>(charge.getId(), charge);
 	}
 
 	public Long getCreated() {
